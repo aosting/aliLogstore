@@ -128,16 +128,18 @@ func (logService *LogService) pushLogStore(w *wrap) {
 func (logService *LogService) Clear() {
 	logService.rw.RLock()
 	st := logService.update
-	wlog := logService.wlog
-	logService.rw.RUnlock()
 	if time.Now().Unix()-st > 10 && st > 0 {
-		DEBUG("  clear!")
+		wlog := logService.wlog
+		logService.rw.RUnlock()
+		DEBUG("clear!")
 		logService.rw.Lock()
 		logService.update = 0
 		pushloghub := wlog.copy(logService.wrapinitcapcity)
 		go logService.pushLogStore(pushloghub)
 		logService.wlog = wlog
 		logService.rw.Unlock()
+	} else {
+		logService.rw.RUnlock()
 	}
 
 }
