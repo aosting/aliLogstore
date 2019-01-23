@@ -41,6 +41,7 @@ func InitlogStore(p *sls.LogProject, cacheSize int, name string) (*LogService, e
 		wlog:            initwrap(cacheSize / 2),
 		wrapinitcapcity: cacheSize / 2,
 		cache:           cacheSize,
+		update:          time.Now().Unix(),
 	}, nil
 }
 
@@ -49,9 +50,6 @@ func (logService *LogService) Push(param map[string]string) {
 		WARN("logService is  error,do nothing!")
 		return
 	}
-	logService.rw.Lock()
-	logService.update = time.Now().Unix()
-	logService.rw.Unlock()
 
 	logService.rw.RLock()
 	wlog := logService.wlog
@@ -75,6 +73,7 @@ func (logService *LogService) Push(param map[string]string) {
 	if wlog.size() >= cachelimit {
 		DEBUG(" arrary cachelimit!")
 		logService.rw.Lock()
+		logService.update = time.Now().Unix()
 		pushloghub := wlog.copy(logService.wrapinitcapcity)
 		go logService.pushLogStore(pushloghub)
 
