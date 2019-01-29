@@ -38,8 +38,8 @@ func InitlogStore(p *sls.LogProject, cacheSize int, name string) (*LogService, e
 	return &LogService{
 		rw:              sync.RWMutex{},
 		lsc:             &ilog,
-		wlog:            initwrap(cacheSize / 2),
-		wrapinitcapcity: cacheSize / 2,
+		wlog:            initwrap(cacheSize),
+		wrapinitcapcity: cacheSize,
 		cache:           cacheSize,
 		update:          time.Now().Unix(),
 	}, nil
