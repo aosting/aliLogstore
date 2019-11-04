@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 	"fmt"
-	"github.com/pkg/errors"
+	"errors"
 	"sync"
 )
 
